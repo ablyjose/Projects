@@ -16,29 +16,10 @@ length = int(input("What is the desired length of your password? We suggest betw
 char = string.ascii_letters + string.digits
 specials = string.punctuation.replace(',', '|')
 
-# lower_letters = []
-# upper_letters = []
-# nums = []
-# specials = []
-
 lowercase = int(input("How many lowercase letters are required? "))
-# for l in range(lowercase):
-#     lower_letters.append(secrets.choice(string.ascii_lowercase))
-
 uppercase = int(input("How many uppercase letters are required? "))
-# for u in range(uppercase):
-    # upper_letters.append(secrets.choice(string.ascii_uppercase))
-
 numbers = int(input("How many numbers are required? "))
-# for n in range(numbers):
-#     nums.append(secrets.choice(string.digits))
-
 special = int(input("How many special symbols are required? "))
-# for s in range(special):
-#     specials.append(secrets.choice(string.punctuation.replace(',', '|')))
-
-# if (len(lower_letters) + len(upper_letters) + len(nums) + len(specials)) > length:
-#     length = len(lower_letters) + len(upper_letters) + len(nums) + len(specials)
 
 lo = 0
 up = 0
@@ -58,18 +39,8 @@ while True:
 
     if (lo >= lowercase) and (up >= uppercase) and (di >= numbers):
         break
-
-""" prelim = "".join(lower_letters + upper_letters + nums + specials)
-listed = list(prelim)
-
-shuffle(listed)
-password = "".join(listed) """
-
 with open("RandomPasswordGenerator/passwords.csv", "a") as f:
     f.write(website_name + "," + password + "\n")
 
 print()
 print("Password saved to secure database")
-
-char = string.ascii_letters + string.digits
-specials = string.punctuation.replace(',', '')
