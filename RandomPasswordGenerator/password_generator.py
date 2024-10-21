@@ -21,14 +21,19 @@ uppercase = int(input("How many uppercase letters are required? "))
 numbers = int(input("How many numbers are required? "))
 special = int(input("How many special symbols are required? "))
 
-lo = 0
-up = 0
-di = 0
+if (lowercase + uppercase + numbers + special) > length:
+    length = lowercase + uppercase + numbers
 
 while True:
-    password = ''.join(secrets.choice(char) for i in range(length - special))
-    password.join(secrets.choice(specials) for i in range(special))
+    password = ''.join(secrets.choice(char) for i in range(length))
+    password = password.join(secrets.choice(specials) for i in range(special))
 
+    print('\n', password)
+
+    lo = 0
+    up = 0
+    di = 0
+    
     for letter in password:
         if letter.islower():
             lo+=1
@@ -37,8 +42,11 @@ while True:
         elif letter.isdigit():
             di+=1
 
+    print('\n', lo, up, di)
+
     if (lo >= lowercase) and (up >= uppercase) and (di >= numbers):
         break
+
 with open("RandomPasswordGenerator/passwords.csv", "a") as f:
     f.write(website_name + "," + password + "\n")
 
