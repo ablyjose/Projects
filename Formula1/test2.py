@@ -27,8 +27,8 @@ fastest_driver_2 = laps_driver_2.pick_fastest()
 telemetry_driver_1 = fastest_driver_1.get_telemetry().add_distance()
 telemetry_driver_2 = fastest_driver_2.get_telemetry().add_distance()
 
-team_driver_1 = fastest_driver_1['Team']
-team_driver_2 = fastest_driver_2['Team']
+team_1 = fastest_driver_1['Team']
+team_2 = fastest_driver_2['Team']
 
 delta_time, ref_tel, compare_tel = utils.delta_time(fastest_driver_1, fastest_driver_2)
 
@@ -45,12 +45,9 @@ fig, ax = plt.subplots(7, gridspec_kw={'height_ratios': plot_ratios})
 ax[0].title.set_text(plot_title)
 
 
-ax[0].plot(ref_tel['Distance'], delta_time)
+ax[0].plot(ref_tel['Distance'], -delta_time)
 ax[0].axhline(0)
 ax[0].set(ylabel=f"Gap to {driver_2} (s)")
-
-team_1 = "McLaren"
-team_2 = "Red Bull"
 
 ax[1].plot(telemetry_driver_1['Distance'], telemetry_driver_1['Speed'], label=driver_1, color=plotting.get_team_color(team_1, quali))
 ax[1].plot(telemetry_driver_2['Distance'], telemetry_driver_2['Speed'], label=driver_2, color=plotting.get_team_color(team_2, quali))
