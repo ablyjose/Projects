@@ -27,9 +27,6 @@ fastest_driver_2 = laps_driver_2.pick_fastest()
 telemetry_driver_1 = fastest_driver_1.get_telemetry().add_distance()
 telemetry_driver_2 = fastest_driver_2.get_telemetry().add_distance()
 
-team_1 = fastest_driver_1['Team']
-team_2 = fastest_driver_2['Team']
-
 driver_1_style = plotting.get_driver_style(driver_1, ['color', 'linestyle'], quali)
 driver_2_style = plotting.get_driver_style(driver_2, ['color', 'linestyle'], quali)
 
