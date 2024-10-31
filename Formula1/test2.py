@@ -80,5 +80,5 @@ ax[6].set(xlabel='Lap distance (meters)')
 for a in ax.flat:
     a.label_outer()
     
-plt.savefig(plot_filename, dpi=300)
+plt.savefig("./testPics/"+plot_filename, dpi=600)
 plt.show()
