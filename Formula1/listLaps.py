@@ -1,12 +1,11 @@
 import pandas as pd
 
 import fastf1 as ff1
-from fastf1.ergast import Ergast
 from fastf1.core import Laps
 
 ff1.Cache.enable_cache('C:/Users/albys/PortProjects/Formula1/cache')
 
-year, gp, session = 2024, "Mexico", 'Q' 
+year, gp, session = 2024, "Monaco", 'Q'
 
 quali = ff1.get_session(year, gp, session)
 quali.load()
@@ -33,26 +32,33 @@ q1_order = Laps(q1_results) \
     .sort_values(by='LapTime') \
     .reset_index(drop=True)
 
+q1_pole = q1_order.pick_fastest()
+q1_order['DeltaToPole'] = q1_order['LapTime'] - q1_pole['LapTime']
+
 q2_order = Laps(q2_results) \
     .sort_values(by='LapTime') \
     .reset_index(drop=True)
+q2_pole = q2_order.pick_fastest()
+q2_order['DeltaToPole'] = q2_order['LapTime'] - q2_pole['LapTime']
 
 q3_order = Laps(q3_results) \
     .sort_values(by='LapTime') \
     .reset_index(drop=True)
+q3_pole = q3_order.pick_fastest()
+q3_order['DeltaToPole'] = q3_order['LapTime'] - q3_pole['LapTime']
 
 q1_order.index += 1
 q2_order.index += 1
 q3_order.index += 1
 
 print("Q1 Results")
-print(q1_order[['Driver', 'LapTime']])
+print(q1_order[['Driver', 'LapTime', 'DeltaToPole']])
 print("--------------------------------\n")
 
 print("Q2 Results")
-print(q2_order[['Driver', 'LapTime']])
+print(q2_order[['Driver', 'LapTime', 'DeltaToPole']])
 print("--------------------------------\n")
 
 print("Q3 Results")
-print(q3_order[['Driver', 'LapTime']])
+print(q3_order[['Driver', 'LapTime', 'DeltaToPole']])
 print("--------------------------------\n")
