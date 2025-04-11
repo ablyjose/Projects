@@ -11,12 +11,12 @@ import pandas as pd
 
 ff1.Cache.enable_cache('C:/Users/albys/PortProjects/Formula1/cache')
 
-year, gp, session = 2024, "Austin", 'Q' 
+year, gp, session = 2025, "Japan", 'Q' 
 
 quali = ff1.get_session(year, gp, session)
 quali.load()
 
-driver_1, driver_2 = 'NOR', 'VER'
+driver_1, driver_2 = 'VER', 'NOR'
 
 laps_driver_1 = quali.laps.pick_drivers(driver_1)
 laps_driver_2 = quali.laps.pick_drivers(driver_2)
@@ -27,8 +27,8 @@ fastest_driver_2 = laps_driver_2.pick_fastest()
 telemetry_driver_1 = fastest_driver_1.get_telemetry().add_distance()
 telemetry_driver_2 = fastest_driver_2.get_telemetry().add_distance()
 
-driver_1_style = plotting.get_driver_style(driver_1, ['color', 'linestyle'], quali)
-driver_2_style = plotting.get_driver_style(driver_2, ['color', 'linestyle'], quali)
+driver_1_style = plotting.get_driver_style(driver_1, ['color', 'linestyle'], ff1.get_session(2024, "Japan", 'Q'))
+driver_2_style = plotting.get_driver_style(driver_2, ['color', 'linestyle'], ff1.get_session(2024, "Japan", 'Q'))
 
 
 delta_time, ref_tel, compare_tel = utils.delta_time(fastest_driver_1, fastest_driver_2)
@@ -46,8 +46,8 @@ fig, ax = plt.subplots(7, gridspec_kw={'height_ratios': plot_ratios})
 ax[0].title.set_text(plot_title)
 
 
-ax[0].plot(ref_tel['Distance'], delta_time)
-ax[0].axhline(0)
+ax[0].plot(-ref_tel['Distance'], delta_time, **driver_1_style)
+ax[0].axhline(0, **driver_2_style)
 ax[0].set(ylabel=f"Gap to {driver_2} (s)")
 
 ax[1].plot(telemetry_driver_1['Distance'], telemetry_driver_1['Speed'], **driver_1_style, label=driver_1)
