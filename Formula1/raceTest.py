@@ -1,31 +1,29 @@
 import fastf1 as ff1
 from fastf1 import plotting
-from fastf1 import utils
-from fastf1.core import Laps
 
 from matplotlib import pyplot as plt
-from matplotlib.pyplot import figure
 
-import numpy as np
-import pandas as pd
 
 ff1.Cache.enable_cache('C:/Users/albys/PortProjects/Formula1/cache')
 
-year, gp, session = 2024, "Dutch", 'R' 
+year, gp, session = 2025, "Bahrain", 'R'
 
 race = ff1.get_session(year, gp, session)
 race.load()
 
-driver_1, driver_2 = 'NOR', 'VER'
+driver_1, driver_2 = 'LEC', 'HAM'
 
-lap_1_driver_1 = race.laps.pick_drivers(driver_1).pick_laps(1)
-lap_1_driver_2 = race.laps.pick_drivers(driver_2).pick_laps(1)
+lap_driver_1 = race.laps.pick_drivers(driver_1).pick_laps(50)
+lap_driver_2 = race.laps.pick_drivers(driver_2).pick_laps(50)
 
-tele_1 = lap_1_driver_1.get_telemetry()
-tele_2 = lap_1_driver_2.get_telemetry()
+print(lap_driver_1[['Driver', 'LapTime', 'Stint', 'Compound', 'TyreLife']])
+print(lap_driver_2[['Driver', 'LapTime', 'Stint', 'Compound', 'TyreLife']])
 
-driver_1_style = plotting.get_driver_style(driver_1, ['color', 'linestyle'], race)
-driver_2_style = plotting.get_driver_style(driver_2, ['color', 'linestyle'], race)
+tele_1 = lap_driver_1.get_telemetry()
+tele_2 = lap_driver_2.get_telemetry()
+
+driver_1_style = plotting.get_driver_style(driver_1, ['color', 'linestyle'], ff1.get_session(2024, gp, session)) # get_driver_style not updated yet for 2025
+driver_2_style = plotting.get_driver_style('SAI', ['color', 'linestyle'], ff1.get_session(2024, gp, session))
 
 
 plot_size = [30, 30]
@@ -58,5 +56,5 @@ ax[3].plot(tele_2['Distance'], tele_2['RPM'], **driver_2_style, label=driver_2)
 ax[3].set(ylabel='RPM')
 
 
-plt.savefig("./testPics/"+plot_filename, dpi=600)
+plt.savefig("C:/Users/albys/PortProjects/Formula1/testPics/"+plot_filename, dpi=600)
 plt.show()
