@@ -5,7 +5,7 @@ from fastf1.core import Laps
 
 ff1.Cache.enable_cache('C:/Users/albys/PortProjects/Formula1/cache')
 
-year, gp, session = 2024, "Monaco", 'Q'
+year, gp, session = 2025, "Bahrain", 'Q'
 
 quali = ff1.get_session(year, gp, session)
 quali.load()
@@ -26,6 +26,8 @@ for drv in drivers:
         q2_results.append(fastest_q2)
     if q3 is not None:
         fastest_q3 = q3.pick_fastest()
+        # if drv == "HAM":
+        #     fastest_q3['LapTime'] -= pd.offsets.Milli(58) # counteracts faulty pick_fastest() function in Japan '25
         q3_results.append(fastest_q3)
 
 q1_order = Laps(q1_results) \
@@ -45,7 +47,7 @@ q3_order = Laps(q3_results) \
     .sort_values(by='LapTime') \
     .reset_index(drop=True)
 q3_pole = q3_order.pick_fastest()
-q3_order['DeltaToPole'] = q3_order['LapTime'] - q3_pole['LapTime']
+q3_order['DeltaToPole'] = (q3_order['LapTime'] - q3_pole['LapTime'])
 
 q1_order.index += 1
 q2_order.index += 1
