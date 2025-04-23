@@ -3,9 +3,9 @@ import pandas as pd
 import fastf1 as ff1
 from fastf1.core import Laps
 
-ff1.Cache.enable_cache('C:/Users/albys/PortProjects/Formula1/cache')
+ff1.Cache.enable_cache('Formula1/cache')
 
-year, gp, session = 2025, "Bahrain", 'Q'
+year, gp, session = 2025, "Jeddah", 'Q'
 
 quali = ff1.get_session(year, gp, session)
 quali.load()

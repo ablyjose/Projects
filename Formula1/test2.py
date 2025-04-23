@@ -9,14 +9,14 @@ from matplotlib.pyplot import figure
 import numpy as np
 import pandas as pd
 
-ff1.Cache.enable_cache('C:/Users/albys/PortProjects/Formula1/cache')
+ff1.Cache.enable_cache('Formula1/cache')
 
-year, gp, session = 2025, "Bahrain", 'R' 
+year, gp, session = 2025, "Jeddah", 'Q' 
 
 quali = ff1.get_session(year, gp, session)
 quali.load()
 
-driver_1, driver_2 = 'LEC', 'HAM'
+driver_1, driver_2 = 'VER', 'PIA'
 
 laps_driver_1 = quali.laps.pick_drivers(driver_1)
 laps_driver_2 = quali.laps.pick_drivers(driver_2)
@@ -32,7 +32,7 @@ telemetry_driver_1 = fastest_driver_1.get_telemetry().add_distance()
 telemetry_driver_2 = fastest_driver_2.get_telemetry().add_distance()
 
 driver_1_style = plotting.get_driver_style(driver_1, ['color', 'linestyle'], ff1.get_session(2024, "Japan", 'Q'))
-driver_2_style = plotting.get_driver_style('SAI', ['color', 'linestyle'], ff1.get_session(2024, "Japan", 'Q'))
+driver_2_style = plotting.get_driver_style(driver_2, ['color', 'linestyle'], ff1.get_session(2024, "Japan", 'Q'))
 
 
 delta_time, ref_tel, compare_tel = utils.delta_time(fastest_driver_1, fastest_driver_2)
