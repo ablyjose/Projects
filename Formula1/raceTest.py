@@ -4,7 +4,7 @@ from fastf1 import plotting
 from matplotlib import pyplot as plt
 
 
-ff1.Cache.enable_cache('C:/Users/albys/PortProjects/Formula1/cache')
+ff1.Cache.enable_cache('Formula1/cache')
 
 year, gp, session = 2025, "Bahrain", 'R'
 

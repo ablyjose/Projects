@@ -9,7 +9,7 @@ from fastf1.core import Laps
 import numpy as np
 import pandas as pd
 
-ff1.Cache.enable_cache('C:/Users/albys/PortProjects/Formula1/cache')
+ff1.Cache.enable_cache('Formula1/cache')
 
 year, gp, session = 2025, "Bahrain", 'FP2'
 
