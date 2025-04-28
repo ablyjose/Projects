@@ -1,6 +1,6 @@
 Formula1/cache/*
 Formula1/info.txt
 RandomPasswordGenerator/passwords.csv
-AlbyDirectory/node_modules/*
+AlbyDirectory/node_modules/
 AlbyDirectory/package-lock.json
 AlbyDirectory/package.json
