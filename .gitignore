@@ -2,3 +2,4 @@ Formula1/cache/*
 Formula1/info.txt
 RandomPasswordGenerator/passwords.csv
 AlbyDirectory/node_modules/
+AlbyDirectory/.env/
