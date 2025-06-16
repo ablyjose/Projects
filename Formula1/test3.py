@@ -12,6 +12,3 @@ year, gp, session = 2024, "Brazil", 'R'
 
 race = ff1.get_session(year, gp, session)
 race.load(messages=True)
-
-print(race.race_control_messages[race.race_control_messages.Category == 'SafetyCar'])
-
