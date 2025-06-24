@@ -11,12 +11,12 @@ import pandas as pd
 
 ff1.Cache.enable_cache('Formula1/cache')
 
-year, gp, session = 2025, "Jeddah", 'Q' 
+year, gp, session = 2025, "Canada", 'Q' 
 
 quali = ff1.get_session(year, gp, session)
 quali.load()
 
-driver_1, driver_2 = 'VER', 'PIA'
+driver_1, driver_2 = 'RUS', 'VER'
 
 laps_driver_1 = quali.laps.pick_drivers(driver_1)
 laps_driver_2 = quali.laps.pick_drivers(driver_2)
@@ -24,9 +24,8 @@ laps_driver_2 = quali.laps.pick_drivers(driver_2)
 fastest_driver_1 = laps_driver_1.pick_fastest()
 fastest_driver_2 = laps_driver_2.pick_fastest()
 
-print(fastest_driver_1)
-print()
-print(fastest_driver_2)
+# print(fastest_driver_1['Driver', 'LapTime', 'Sector1Time', 'Sector2Time', 'Sector3Time'])
+print(fastest_driver_2['LapTime'])
 
 telemetry_driver_1 = fastest_driver_1.get_telemetry().add_distance()
 telemetry_driver_2 = fastest_driver_2.get_telemetry().add_distance()
@@ -50,9 +49,9 @@ fig, ax = plt.subplots(7, gridspec_kw={'height_ratios': plot_ratios})
 ax[0].title.set_text(plot_title)
 
 
-ax[0].plot(-ref_tel['Distance'], delta_time, **driver_1_style)
-ax[0].axhline(0, **driver_2_style)
-ax[0].set(ylabel=f"Gap to {driver_2} (s)")
+ax[0].plot(ref_tel['Distance'], delta_time, **driver_2_style)
+ax[0].axhline(0, **driver_1_style)
+ax[0].set(ylabel=f"Gap to {driver_1} (s)")
 
 ax[1].plot(telemetry_driver_1['Distance'], telemetry_driver_1['Speed'], **driver_1_style, label=driver_1)
 ax[1].plot(telemetry_driver_2['Distance'], telemetry_driver_2['Speed'], **driver_2_style, label=driver_2)
@@ -84,5 +83,5 @@ ax[6].set(xlabel='Lap distance (meters)')
 for a in ax.flat:
     a.label_outer()
     
-plt.savefig("./testPics/"+plot_filename, dpi=600)
+plt.savefig("./Formula1/testPics/"+plot_filename, dpi=600)
 plt.show()

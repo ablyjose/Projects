@@ -11,21 +11,21 @@ import pandas as pd
 
 ff1.Cache.enable_cache('Formula1/cache')
 
-year, gp, session = 2025, "Bahrain", 'FP2'
+year, gp, session = 2025, "Canada", 'FP2'
 
 practice2 = ff1.get_session(year, gp, session)
 practice2.load()
 
-drivers = ['LEC', 'HAM']
+drivers = ['RUS', 'ANT']
 race_sims = list()
 
 for drv in drivers:
-    racepacelaps = practice2.laps.pick_drivers(drv).pick_quicklaps()
+    racepacelaps = practice2.laps.pick_drivers(drv).pick_quicklaps(1.1)
     # fastest_race = racepacelaps.pick_fastest()
     race_sims.append(racepacelaps)
     
 race_simulation_laps = Laps(pd.concat(race_sims)) \
-    .sort_values(by='LapTime') \
+    .sort_values(by=['Driver', 'LapNumber']) \
     .reset_index(drop=True)
 
 # lead_racelaps = practice2.laps.pick_drivers(['HAM', 'RUS', 'LEC', 'SAI', 'NOR', 'HUL', 'VER']).pick_quicklaps().pick_compounds("MEDIUM")
@@ -40,5 +40,3 @@ pd.set_option('display.max_rows', None)
 
 # print(lead_racelaps[['Driver', 'LapTime', 'LapNumber', 'Stint', 'Compound', 'TyreLife']])
 print(race_simulation_laps[['Driver', 'LapTime', 'LapNumber', 'Stint', 'Compound', 'TyreLife']])
-print()
-print()
