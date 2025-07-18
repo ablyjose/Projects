@@ -11,7 +11,7 @@ import pandas as pd
 
 ff1.Cache.enable_cache('Formula1/cache')
 
-year, gp, session = 2025, "Canada", 'FP2'
+year, gp, session = 2024, "Austria", 'FP2'
 
 practice2 = ff1.get_session(year, gp, session)
 practice2.load()
