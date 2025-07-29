@@ -1,52 +1,55 @@
+from urllib.request import urlopen
+import json
 import pandas as pd
-# import numpy as np
-# import random
-import requests
+# import fastf1 as ff1
 
-# Don't forget to 'pip install fastf1'
-import fastf1 as ff1
+# ff1.Cache.enable_cache('Formula1/cache')
 
-# Don't forget to 'pip install seaborn'
-# import seaborn as sns
-import matplotlib.pyplot as plt
-
-ff1.Cache.enable_cache('Formula1/cache')
-
-def ergast_retrieve(api_endpoint: str):
-    url = f'https://ergast.com/api/f1/{api_endpoint}.json'
-    response = requests.get(url).json()
+# Ergast API is deprecated, using manual get_driver_standings function instead
+def get_driver_standings():
+    driver_call = urlopen(f"https://api.openf1.org/v1/drivers?session_key=9693")
+    driver_data = json.loads(driver_call.read().decode('utf-8'))
+    drivers = pd.DataFrame(driver_data)
+    standings = pd.DataFrame({
+        'DriverNumber': drivers['driver_number'],
+        'Driver': drivers['full_name'],
+        'Points': 0.0,
+        'Team': drivers['team_name'],
+    })
+    standings.index = range(1, len(standings) + 1)
     
-    return response['MRData']
+    schedule_call = urlopen(f"https://api.openf1.org/v1/sessions?date_start>=2025-01-01&session_type=Race")
+    data = json.loads(schedule_call.read().decode('utf-8'))
+    schedule = pd.DataFrame(data)
+    session_keys = schedule['session_key'].tolist()
 
-rounds = 18
-all_championship_standings = pd.DataFrame()
-driver_team_mapping = {}
-
-# Initate a loop through all the rounds
-for i in range(1, rounds + 1):
-    # Make request to driverStandings endpoint for the current round
-    race = ergast_retrieve(f'current/{i}/driverStandings')
-    
-    # Get the standings from the result
-    standings = race['StandingsTable']['StandingsLists'][0]['DriverStandings']
-    
-    # Initiate a dictionary to store the current rounds' standings in
-    current_round = {'round': i}
-    
-    # Loop through all the drivers to collect their information
-    for i in range(len(standings)):
-        driver = standings[i]['Driver']['code']
-        position = standings[i]['position']
+    for key in session_keys:
+        session_call = urlopen(f"https://api.openf1.org/v1/session_result?session_key={key}")
+        session_data = json.loads(session_call.read().decode('utf-8'))
+        results = pd.DataFrame(session_data)
         
-        # Store the drivers' position
-        current_round[driver] = int(position)
-        
-        # Create mapping for driver-team to be used for the coloring of the lines
-        driver_team_mapping[driver] = standings[i]['Constructors'][0]['name']
+        for index, row in results.iterrows():
+            driver_number = row['driver_number']
+            points = row['points']
+            
+            if driver_number in standings['DriverNumber'].values:
+                standings.loc[standings['DriverNumber'] == driver_number, 'Points'] += points
+            else:
+                new_driver_call = urlopen(f"https://api.openf1.org/v1/drivers?driver_number={driver_number}&session_key={key}")
+                new_data = json.loads(new_driver_call.read().decode('utf-8'))
+                new_driver = pd.DataFrame(new_data)
 
+                new_row = pd.DataFrame({
+                    'DriverNumber': new_driver['driver_number'],
+                    'Driver': new_driver['full_name'],
+                    'Points': points,
+                    'Team': new_driver['team_name']
+                })
+                standings = pd.concat([standings, new_row], ignore_index=True)
 
-    # Append the current round to our fial dataframe
-    all_championship_standings = all_championship_standings.append(current_round, ignore_index=True)
-    
-# Set the round as the index of the dataframe
-all_championship_standings = all_championship_standings.set_index('round')
+    updated_standings = standings.sort_values(by='Points', ascending=False).reset_index(drop=True)
+    updated_standings.index = range(1, len(updated_standings) + 1)
+    updated_standings.to_csv('Formula1/standings.csv', index_label='Position')
+    return updated_standings
+
+print(get_driver_standings())
