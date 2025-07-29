@@ -11,21 +11,21 @@ import pandas as pd
 
 ff1.Cache.enable_cache('Formula1/cache')
 
-year, gp, session = 2025, "Canada", 'Q' 
+year, gp, session = 2025, "Belgium", 'Race' 
 
-quali = ff1.get_session(year, gp, session)
+quali = ff1.get_event(year, gp).get_session(session)
 quali.load()
 
-driver_1, driver_2 = 'RUS', 'VER'
+driver_1, driver_2 = 'PIA', 'NOR'
 
 laps_driver_1 = quali.laps.pick_drivers(driver_1)
 laps_driver_2 = quali.laps.pick_drivers(driver_2)
 
-fastest_driver_1 = laps_driver_1.pick_fastest()
-fastest_driver_2 = laps_driver_2.pick_fastest()
+fastest_driver_1 = laps_driver_1.pick_lap(43)
+fastest_driver_2 = laps_driver_2.pick_lap(43)
 
 # print(fastest_driver_1['Driver', 'LapTime', 'Sector1Time', 'Sector2Time', 'Sector3Time'])
-print(fastest_driver_2['LapTime'])
+# print(fastest_driver_2['LapTime'])
 
 telemetry_driver_1 = fastest_driver_1.get_telemetry().add_distance()
 telemetry_driver_2 = fastest_driver_2.get_telemetry().add_distance()
