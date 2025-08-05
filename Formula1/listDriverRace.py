@@ -5,21 +5,21 @@ from fastf1.core import Laps
 
 ff1.Cache.enable_cache('Formula1/cache')
 
-year, gp, session = 2025, "Austria", 'R'
+year, gp, session = 2025, "Hungary", 'Q'
 
-race = ff1.get_session(year, gp, session)
-race.load()
+quali = ff1.get_session(year, gp, session)
+quali.load()
 
-drivers = ['NOR', 'PIA', 'LEC', 'HAM', 'RUS', 'TSU']
+drivers = ['LEC', 'HAM']
 list_final_laps = list()
 
 for driver in drivers:
-    driver_laps = race.laps.pick_drivers(driver).pick_fastest()    
+    driver_laps = quali.laps.pick_drivers(driver).pick_fastest()    
     list_final_laps.append(driver_laps)
 
 final_laps = Laps(list_final_laps) \
     .sort_values(by=['TyreLife']) \
     .reset_index(drop=True)
 
-print(final_laps.columns)
+# print(final_laps.columns)
 print(final_laps[['Driver', 'LapTime', 'LapNumber', 'Stint', 'Compound', 'TyreLife', 'SpeedI1', 'SpeedI2', 'SpeedFL', 'SpeedST']])
