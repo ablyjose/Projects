@@ -2,4 +2,5 @@ Formula1/cache
 Formula1/__pycache__
 # Formula1/testPics
 Formula1/info.txt
+Formula1/standings.csv
 RandomPasswordGenerator/passwords.csv
