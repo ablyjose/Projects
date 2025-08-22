@@ -26,8 +26,9 @@ for drv in drivers:
         q2_results.append(fastest_q2)
     if q3 is not None:
         fastest_q3 = q3.pick_fastest()
-        # if drv == "HAM":
-        #     fastest_q3['LapTime'] -= pd.offsets.Milli(58) # counteracts faulty pick_fastest() function in Japan '25
+        if fastest_q3['LapTime'] is pd.NaT:
+            fastest_q3['LapTime'] = "DNF"
+                    
         q3_results.append(fastest_q3)
 
 q1_order = Laps(q1_results) \
