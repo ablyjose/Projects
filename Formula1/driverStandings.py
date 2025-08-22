@@ -6,13 +6,11 @@ from pathlib import Path
 
 def get_driver_standings(year=2025):
     schedule_call = urlopen(f"https://api.openf1.org/v1/sessions?date_start>={year}-01-01&date_end<={year}-12-31&session_type=Race")
-    data = json.loads(schedule_call.read().decode('utf-8'))
-    schedule = pd.DataFrame(data)
+    schedule = pd.DataFrame(json.loads(schedule_call.read().decode('utf-8')))
     session_keys = schedule['session_key'].tolist()
     
     driver_call = urlopen(f"https://api.openf1.org/v1/drivers?session_key={session_keys[0]}")
-    driver_data = json.loads(driver_call.read().decode('utf-8'))
-    drivers = pd.DataFrame(driver_data)
+    drivers = pd.DataFrame(json.loads(driver_call.read().decode('utf-8')))
     standings = pd.DataFrame({
         'DriverNumber': drivers['driver_number'],
         'Driver': drivers['full_name'],
@@ -21,8 +19,11 @@ def get_driver_standings(year=2025):
     })
     standings.index = range(1, len(standings) + 1)
 
+    cache_dir = Path("Formula1/cache/openF1")
+    cache_dir.mkdir(parents=True, exist_ok=True)
+
     for key in session_keys:
-        file_path = Path(f"Formula1/cache/openF1/session_{key}.json")
+        file_path = cache_dir / f"session_{key}.json"
         if file_path.exists():
             with open(file_path, "r") as f:
                 session_data = json.load(f)
@@ -42,8 +43,7 @@ def get_driver_standings(year=2025):
                 standings.loc[standings['DriverNumber'] == driver_number, 'Points'] += points
             else:
                 new_driver_call = urlopen(f"https://api.openf1.org/v1/drivers?driver_number={driver_number}&session_key={key}")
-                new_data = json.loads(new_driver_call.read().decode('utf-8'))
-                new_driver = pd.DataFrame(new_data)
+                new_driver = pd.DataFrame(json.loads(new_driver_call.read().decode('utf-8')))
 
                 new_row = pd.DataFrame({
                     'DriverNumber': new_driver['driver_number'],
