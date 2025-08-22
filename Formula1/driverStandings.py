@@ -1,4 +1,5 @@
 from urllib.request import urlopen
+from urllib.error import HTTPError
 import json
 import pandas as pd
 import time
@@ -28,11 +29,15 @@ def get_driver_standings(year=2025):
             with open(file_path, "r") as f:
                 session_data = json.load(f)
         else:
-            session_call = urlopen(f"https://api.openf1.org/v1/session_result?session_key={key}")
-            session_data = json.loads(session_call.read().decode('utf-8'))
+            try:
+                session_call = urlopen(f"https://api.openf1.org/v1/session_result?session_key={key}")
+                session_data = json.loads(session_call.read().decode('utf-8'))
+            except HTTPError as e:
+                time.sleep(0.2)
+                session_call = urlopen(f"https://api.openf1.org/v1/session_result?session_key={key}")
+                session_data = json.loads(session_call.read().decode('utf-8'))
             with open(file_path, "w") as f:
                 json.dump(session_data, f)
-            time.sleep(0.5)  # To avoid hitting API rate limits
 
         results = pd.DataFrame(session_data)
         for index, row in results.iterrows():
