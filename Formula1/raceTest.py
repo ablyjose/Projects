@@ -16,8 +16,8 @@ driver_1, driver_2 = 'PIA', 'LEC'
 lap_driver_1 = race.laps.pick_drivers(driver_1).pick_laps(59)
 lap_driver_2 = race.laps.pick_drivers(driver_2).pick_laps(56)
 
-print(lap_driver_1[['Driver', 'LapTime', 'Stint', 'Compound', 'TyreLife', 'DRS']])
-print(lap_driver_2[['Driver', 'LapTime', 'Stint', 'Compound', 'TyreLife', 'DRS']])
+# print(lap_driver_1.columns)
+# print(lap_driver_2.columns)
 
 tele_1 = lap_driver_1.get_telemetry()
 tele_2 = lap_driver_2.get_telemetry()
