@@ -5,7 +5,10 @@ from fastf1.core import Laps
 
 ff1.Cache.enable_cache('Formula1/cache')
 
-year, gp, session = 2025, "Saudi Arabia", 'Q'
+session = 'Q'
+
+year = int(input("Enter year: "))
+gp = input("Enter Grand Prix name: ")
 
 quali = ff1.get_session(year, gp, session)
 quali.load(weather=False, messages=False, telemetry=False)
