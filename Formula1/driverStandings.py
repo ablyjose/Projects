@@ -63,4 +63,4 @@ def get_driver_standings(year=2025):
     updated_standings.to_csv('Formula1/standings.csv', index_label='Position')
     return updated_standings
 
-# print(get_driver_standings())
+print(get_driver_standings())
