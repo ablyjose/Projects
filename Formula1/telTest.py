@@ -72,7 +72,6 @@ driver_colors = {
 driver_1_color = driver_colors[driver_1]
 driver_2_color = driver_colors[driver_2]
 
-print(driver_1_color, driver_2_color)
 driver2s = {'NOR', 'ANT', 'TSU', 'HAM', 'SAI', 'LAW', 'ALO', 'BEA', 'BOR', 'COL'}
 
 driver_1_style = {'color': driver_1_color, 'linestyle': '-'}
