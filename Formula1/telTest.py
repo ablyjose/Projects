@@ -35,8 +35,18 @@ match session_name:
         driver_1_laps = session.laps.pick_drivers(driver_1)
         driver_2_laps = session.laps.pick_drivers(driver_2)
 
-        fastest_driver_1 = driver_1_laps.pick_fastest()
-        fastest_driver_2 = driver_2_laps.pick_fastest()
+        lap_1 = input("Lap for " + driver_1 + " ('fastest' or number): ")
+        lap_2 = input("Lap for " + driver_2 + " ('fastest' or number): ")
+
+        if lap_1 == "fastest":
+            fastest_driver_1 = driver_1_laps.pick_fastest()
+        else:
+            fastest_driver_1 = driver_1_laps.pick_laps(int(lap_1))
+        
+        if lap_2 == "fastest":
+            fastest_driver_2 = driver_2_laps.pick_fastest()
+        else:
+            fastest_driver_2 = driver_2_laps.pick_laps(int(lap_2))
     case _:
         print("Session not recognized")
 
