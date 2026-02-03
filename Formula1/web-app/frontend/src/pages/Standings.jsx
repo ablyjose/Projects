@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { getStandings } from '../services/api';
 import { Trophy } from 'lucide-react';
+import InputSelect from '../components/InputSelect';
 
 const Standings = () => {
     const [standings, setStandings] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const [year, setYear] = useState(2023);
+
     useEffect(() => {
         const fetchStandings = async () => {
             try {
-                const data = await getStandings(2025);
+                const data = await getStandings(year);
                 setStandings(data);
             } catch (err) {
                 console.error("Failed to load standings", err);
@@ -19,22 +22,35 @@ const Standings = () => {
         };
 
         fetchStandings();
-    }, []);
+    }, [year]);
 
     if (loading) return <div style={{ color: 'var(--text-primary)' }}>Loading Standings...</div>;
 
     return (
         <div className="page-standings">
-            <header style={{ marginBottom: '32px' }}>
+            <header style={{ marginBottom: '22px' }}>
                 <h1 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '8px' }}>Driver Standings</h1>
-                <p style={{ color: 'var(--text-secondary)' }}>2025 World Championship</p>
+                {/* <p style={{ color: 'var(--text-secondary)' }}>{year} World Championship</p> */}
             </header>
+
+            <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'flex-start' }}>
+                <InputSelect
+                    value={year}
+                    onChange={setYear}
+                    options={[
+                        { label: '2026', value: 2026 },
+                        { label: '2025', value: 2025 },
+                        { label: '2024', value: 2024 },
+                        { label: '2023', value: 2023 }
+                    ]}
+                />
+            </div>
 
             <div className="card">
                 <table className="data-table">
                     <thead>
                         <tr>
-                            <th style={{ width: '60px' }}>Pos</th>
+                            <th style={{ width: '60px' }}>Position</th>
                             <th>Driver</th>
                             <th>Team</th>
                             <th style={{ textAlign: 'right' }}>Points</th>
