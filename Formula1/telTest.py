@@ -1,4 +1,5 @@
 import fastf1 as ff1
+import os
 from fastf1 import plotting
 from fastf1 import utils
 from fastf1.core import Laps
@@ -147,6 +148,9 @@ for i in range(6):
 for a in ax.flat:
     a.label_outer()
     
+if not os.path.exists("./Formula1/testPics"):
+    os.makedirs("./Formula1/testPics")
+
 plt.savefig("./Formula1/testPics/"+plot_filename, dpi=600, facecolor=bg_color)
 print(fastest_driver_1['LapTime'])
 print(fastest_driver_2['LapTime'])

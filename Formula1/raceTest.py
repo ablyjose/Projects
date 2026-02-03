@@ -1,4 +1,5 @@
 import fastf1 as ff1
+import os
 from fastf1 import plotting
 
 from matplotlib import pyplot as plt
@@ -54,6 +55,9 @@ ax[3].plot(tele_1['Distance'], tele_1['RPM'], driver_1_style, label=driver_1)
 ax[3].plot(tele_2['Distance'], tele_2['RPM'], driver_2_style, label=driver_2)
 ax[3].set(ylabel='RPM')
 
+
+if not os.path.exists("./Formula1/testPics"):
+    os.makedirs("./Formula1/testPics")
 
 plt.savefig("./Formula1/testPics/"+plot_filename, dpi=600)
 plt.show()
