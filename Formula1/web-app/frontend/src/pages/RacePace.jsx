@@ -11,9 +11,9 @@ const RacePace = () => {
 
     // Form State
     const [year, setYear] = useState(2025);
-    const [gp, setGp] = useState('Bahrain'); // Default
+    const [gp, setGp] = useState('Australia');
     const [session, setSession] = useState('R');
-    const [drivers, setDrivers] = useState('VER, NOR'); // Default comparison
+    const [drivers, setDrivers] = useState('NOR, VER');
 
     useEffect(() => {
         getEvents(year).then(setEvents).catch(console.error);
