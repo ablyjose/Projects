@@ -1,4 +1,7 @@
 Formula1/cache
+Formula1/web-app/cache
+Formula1/web-app/backend/__pycache__
+Formula1/web-app/backend/routers/__pycache__
 Formula1/__pycache__
 Formula1/testPics
 Formula1/info.txt
