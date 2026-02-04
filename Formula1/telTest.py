@@ -17,7 +17,7 @@ year, gp, session_name = int(input("Year: ")), input("GP: "), input("Session: ")
 session = ff1.get_event(year, gp).get_session(session_name)
 session.load(weather=False)
 
-driver_1, driver_2 = input("Driver 1: "), input("Driver 2: ")
+driver_1, driver_2 = input("Driver 1: ").upper(), input("Driver 2: ").upper()
 
 match session_name:
     case 'FP1' | 'FP2' | 'FP3':
