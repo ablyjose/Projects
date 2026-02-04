@@ -83,8 +83,7 @@ const RacePace = () => {
                         onChange={setSession}
                         options={[
                             { label: 'Race', value: 'R' },
-                            { label: 'Sprint', value: 'S' },
-                            { label: 'Qualifying', value: 'Q' }
+                            { label: 'Sprint', value: 'S' }
                         ]}
                     />
                     <div className="input-group" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>

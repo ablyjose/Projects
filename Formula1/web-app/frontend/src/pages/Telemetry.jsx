@@ -11,10 +11,10 @@ const Telemetry = () => {
 
     // Form
     const [year, setYear] = useState(2025);
-    const [gp, setGp] = useState('Bahrain');
+    const [gp, setGp] = useState('Australia');
     const [session, setSession] = useState('Q');
-    const [driver1, setDriver1] = useState('VER');
-    const [driver2, setDriver2] = useState('NOR');
+    const [driver1, setDriver1] = useState('NOR');
+    const [driver2, setDriver2] = useState('VER');
 
     useEffect(() => {
         getEvents(year).then(setEvents).catch(console.error);
@@ -60,7 +60,7 @@ const Telemetry = () => {
                             dataKey={dataKey}
                             name={data.Driver2.Name}
                             stroke={data.Driver2.Color}
-                            dot={false}
+                            dot={true}
                             strokeWidth={2}
                             strokeDasharray="4 4"
                         />
@@ -80,9 +80,9 @@ const Telemetry = () => {
 
             <div className="card" style={{ margin: '24px 0' }}>
                 <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'end' }}>
-                    <InputSelect label="Year" value={year} onChange={setYear} options={[2025, 2024].map(y => ({ label: y, value: y }))} />
+                    <InputSelect label="Year" value={year} onChange={setYear} options={[2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025].map(y => ({ label: y, value: y }))} />
                     <InputSelect label="Event" value={gp} onChange={setGp} options={events.map(e => ({ label: e.EventName, value: e.EventName }))} />
-                    <InputSelect label="Session" value={session} onChange={setSession} options={[{ label: 'Quali', value: 'Q' }, { label: 'Race', value: 'R' }]} />
+                    <InputSelect label="Session" value={session} onChange={setSession} options={[{ label: 'Practice 1', value: 'FP1' }, { label: 'Practice 2', value: 'FP2' }, { label: 'Practice 3', value: 'FP3' }, { label: 'Qualifying', value: 'Q' }, { label: 'Sprint', value: 'S' }, { label: 'Race', value: 'R' }]} />
 
                     <div className="input-group">
                         <label style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Driver 1</label>
