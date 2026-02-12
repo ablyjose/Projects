@@ -26,13 +26,13 @@ match session_name:
 
         fastest_driver_1 = driver_1_laps.pick_fastest()
         fastest_driver_2 = driver_2_laps.pick_fastest()
-    case 'Q':
+    case 'Q' | 'SQ':
         q1_driver_1, q2_driver_1, q3_driver_1 = session.laps.pick_drivers(driver_1).split_qualifying_sessions()
         q1_driver_2, q2_driver_2, q3_driver_2 = session.laps.pick_drivers(driver_2).split_qualifying_sessions()
 
         fastest_driver_1 = q3_driver_1.pick_fastest()
         fastest_driver_2 = q3_driver_2.pick_fastest()
-    case 'R':
+    case 'R' | 'S':
         driver_1_laps = session.laps.pick_drivers(driver_1)
         driver_2_laps = session.laps.pick_drivers(driver_2)
 
@@ -49,7 +49,8 @@ match session_name:
         else:
             fastest_driver_2 = driver_2_laps.pick_laps(int(lap_2))
     case _:
-        print("Session not recognized")
+        print("Session not recognized, please talk to developer")
+        exit()
 
 telemetry_driver_1 = fastest_driver_1.get_telemetry().add_distance()
 telemetry_driver_2 = fastest_driver_2.get_telemetry().add_distance()

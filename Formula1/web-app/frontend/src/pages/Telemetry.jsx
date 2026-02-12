@@ -101,7 +101,7 @@ const Telemetry = () => {
                 <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'end' }}>
                     <InputSelect label="Year" value={year} onChange={setYear} options={[2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025].map(y => ({ label: y, value: y }))} />
                     <InputSelect label="Event" value={gp} onChange={setGp} options={events.map(e => ({ label: e.EventName, value: e.EventName }))} />
-                    <InputSelect label="Session" value={session} onChange={setSession} options={[{ label: 'Practice 1', value: 'FP1' }, { label: 'Practice 2', value: 'FP2' }, { label: 'Practice 3', value: 'FP3' }, { label: 'Qualifying', value: 'Q' }, { label: 'Sprint', value: 'S' }, { label: 'Race', value: 'R' }]} />
+                    <InputSelect label="Session" value={session} onChange={setSession} options={[{ label: 'Practice 1', value: 'FP1' }, { label: 'Practice 2', value: 'FP2' }, { label: 'Practice 3', value: 'FP3' }, { label: 'Sprint Qualifying', value: 'SQ' }, { label: 'Sprint', value: 'S' }, { label: 'Qualifying', value: 'Q' }, { label: 'Race', value: 'R' }]} />
 
                     <div className="input-group">
                         <label style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Driver 1</label>
