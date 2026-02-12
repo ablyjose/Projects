@@ -2,7 +2,65 @@ import React, { useEffect, useState } from 'react';
 import { getTelemetry, getEvents } from '../services/api';
 import ChartContainer from '../components/ChartContainer';
 import InputSelect from '../components/InputSelect';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
+
+const TelemetryChart = React.memo(({ data, title, dataKey, yLabel, syncId = "telemetryId" }) => (
+    <ChartContainer title={title} height={300}>
+        {data ? (
+            <ResponsiveContainer width="100%" height="100%">
+                <LineChart>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                    <XAxis dataKey="Distance" type="number" domain={['auto', 'auto']} stroke="var(--text-secondary)" tick={false} />
+                    <YAxis stroke="var(--text-secondary)" label={{ value: yLabel, angle: -90, position: 'insideLeft' }} domain={['auto', 'auto']} />
+                    <Tooltip
+                        labelFormatter={(v) => `Dist: ${Math.round(v)}m`}
+                        contentStyle={{ backgroundColor: '#1e1e1e', borderColor: '#333' }}
+                        formatter={(value) => Number(value).toFixed(2)}
+                    />
+                    <Legend />
+                    {/* Driver 1 */}
+                    <Line
+                        data={data.Driver1.Telemetry}
+                        dataKey={dataKey}
+                        name={data.Driver1.Name}
+                        stroke={data.Driver1.Color}
+                        dot={false}
+                        strokeWidth={2}
+                    />
+                    {/* Driver 2 */}
+                    <Line
+                        data={data.Driver2.Telemetry}
+                        dataKey={dataKey}
+                        name={data.Driver2.Name}
+                        stroke={data.Driver2.Color}
+                        dot={false}
+                        strokeWidth={2}
+                        strokeDasharray="4 4"
+                    />
+                    {/* Corners */}
+                    {data.Corners && data.Corners.map((corner, idx) => (
+                        <ReferenceLine
+                            key={idx}
+                            x={corner.Distance}
+                            stroke="#444"
+                            strokeDasharray="3 3"
+                            label={{
+                                value: corner.Number + corner.Letter,
+                                position: 'bottom',
+                                fill: 'var(--text-secondary)',
+                                fontSize: 10
+                            }}
+                        />
+                    ))}
+                </LineChart>
+            </ResponsiveContainer>
+        ) : (
+            <div className="placeholder-text">Load data to view</div>
+        )}
+    </ChartContainer>
+));
+
+// const Telemetry = () => {
 
 const Telemetry = () => {
     const [data, setData] = useState(null);
@@ -32,52 +90,13 @@ const Telemetry = () => {
         }
     };
 
-    const TelemetryChart = ({ title, dataKey, yLabel, syncId = "telemetryId" }) => (
-        <ChartContainer title={title} height={300}>
-            {data ? (
-                <ResponsiveContainer width="100%" height="100%">
-                    <LineChart>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                        <XAxis dataKey="Distance" type="number" domain={['auto', 'auto']} stroke="var(--text-secondary)" tick={false} />
-                        <YAxis stroke="var(--text-secondary)" label={{ value: yLabel, angle: -90, position: 'insideLeft' }} domain={['auto', 'auto']} />
-                        <Tooltip
-                            labelFormatter={(v) => `Dist: ${Math.round(v)}m`}
-                            contentStyle={{ backgroundColor: '#1e1e1e', borderColor: '#333' }}
-                        />
-                        <Legend />
-                        {/* Driver 1 */}
-                        <Line
-                            data={data.Driver1.Telemetry}
-                            dataKey={dataKey}
-                            name={data.Driver1.Name}
-                            stroke={data.Driver1.Color}
-                            dot={false}
-                            strokeWidth={2}
-                        />
-                        {/* Driver 2 */}
-                        <Line
-                            data={data.Driver2.Telemetry}
-                            dataKey={dataKey}
-                            name={data.Driver2.Name}
-                            stroke={data.Driver2.Color}
-                            dot={true}
-                            strokeWidth={2}
-                            strokeDasharray="4 4"
-                        />
-                    </LineChart>
-                </ResponsiveContainer>
-            ) : (
-                <div className="placeholder-text">Load data to view</div>
-            )}
-        </ChartContainer>
-    );
-
     return (
         <div className="page-telemetry">
             <header>
                 <h1 style={{ fontSize: '2rem', fontWeight: 700 }}>Telemetry Analysis</h1>
             </header>
 
+            {/* Event Selection */}
             <div className="card" style={{ margin: '24px 0' }}>
                 <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'end' }}>
                     <InputSelect label="Year" value={year} onChange={setYear} options={[2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025].map(y => ({ label: y, value: y }))} />
@@ -100,25 +119,41 @@ const Telemetry = () => {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                <TelemetryChart title="Speed Trace" dataKey="Speed" yLabel="km/h" />
-                <TelemetryChart title="Throttle & Brake" dataKey="Throttle" yLabel="%" />
-
                 <ChartContainer title="Time Delta" height={250}>
                     {data && data.Delta ? (
                         <ResponsiveContainer width="100%" height="100%">
                             <LineChart data={data.Delta}>
                                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                                <XAxis dataKey="Distance" Stroke="var(--text-secondary)" />
+                                <XAxis dataKey="Distance" type="number" domain={['auto', 'auto']} stroke="var(--text-secondary)" tick={false} />
                                 <YAxis stroke="var(--text-secondary)" label={{ value: 'Delta (s)', angle: -90, position: 'insideLeft' }} />
                                 <Tooltip
                                     contentStyle={{ backgroundColor: '#1e1e1e', borderColor: '#333' }}
                                     labelFormatter={(v) => `Dist: ${Math.round(v)}m`}
+                                    formatter={(value) => Number(value).toFixed(3)}
                                 />
-                                <Line type="monotone" dataKey="Delta" stroke="var(--text-primary)" dot={false} strokeWidth={2} name={`Gap to ${data.Driver1.Name}`} />
+                                <ReferenceLine y={0} stroke={data.Driver1.Color} strokeWidth={0.75} />
+                                {data.Corners && data.Corners.map((corner, idx) => (
+                                    <ReferenceLine
+                                        key={idx}
+                                        x={corner.Distance}
+                                        stroke="#444"
+                                        strokeDasharray="3 3"
+                                        label={{
+                                            value: corner.Number + corner.Letter,
+                                            position: 'bottom',
+                                            fill: 'var(--text-secondary)',
+                                            fontSize: 10
+                                        }}
+                                    />
+                                ))}
+                                <Line type="monotone" dataKey="Delta" stroke={data.Driver2.Color} dot={false} strokeWidth={2} name={`Gap to ${data.Driver1.Name}`} />
                             </LineChart>
                         </ResponsiveContainer>
-                    ) : <div className="placeholder-text">Load data to view delta</div>}
+                    ) : <div className="placeholder-text">Load data to view</div>}
                 </ChartContainer>
+                <TelemetryChart data={data} title="Speed Trace" dataKey="Speed" yLabel="km/h" />
+                <TelemetryChart data={data} title="Throttle" dataKey="Throttle" yLabel="%" />
+                {/* <TelemetryChart title="Brake" dataKey="Brake" yLabel="%" /> */}
             </div>
             <style>{`
         .input-text {
