@@ -200,6 +200,17 @@ def get_telemetry(year: int, gp: str, session: str, driver1: str, driver2: str, 
         # Calculate Delta
         delta_time, ref_tel, compare_tel = utils.delta_time(lap_d1, lap_d2)
         
+        # Get Circuit Info (Corners)
+        circuit_info = sess.get_circuit_info()
+        corners = []
+        if circuit_info is not None:
+             for _, corner in circuit_info.corners.iterrows():
+                 corners.append({
+                     "Number": int(corner['Number']),
+                     "Distance": float(corner['Distance']),
+                     "Letter": corner['Letter'] if not pd.isna(corner['Letter']) else ""
+                 })
+        
         # We need to structure this for the frontend.
         # Option: Return one large array of objects merged by distance?
         # Or separate arrays.
@@ -236,23 +247,55 @@ def get_telemetry(year: int, gp: str, session: str, driver1: str, driver2: str, 
              })
              
         # Colors
-        c1 = sess.get_driver(driver1)['TeamColor']
-        c2 = sess.get_driver(driver2)['TeamColor']
+
+        driver_colors = {
+            'NOR': '#D2FF00',
+            'PIA': '#FF8F00',
+            'RUS': '#00D2BE',
+            'ANT': '#ADD8E6',
+            'VER': '#1E2A78',
+            'TSU': '#1A2C80',
+            'LEC': '#DC0000',
+            'HAM': '#800080',
+            'ALB': '#FFCCC7',
+            'SAI': '#0082FA',
+            'HAD': '#12264F',
+            'LAW': '#F9F871',
+            'ALO': '#006F62',
+            'STR': '#006F62',
+            'OCO': '#F7F7F7',
+            'BEA': '#FF007F',
+            'HUL': '#39FF14',
+            'BOR': '#009739',
+            'GAS': '#4E90FF',
+            'COL': '#04299C',
+        }
+
+        if (driver1 in driver_colors):
+            c1 = driver_colors.get(driver1)
+        else:
+            c1 = '#'+ sess.get_driver(driver1)['TeamColor']
+        
+        if (driver2 in driver_colors):
+            c2 = driver_colors.get(driver2)
+        else:
+            c2 = '#'+sess.get_driver(driver2)['TeamColor']
         
         return {
             "Driver1": {
                 "Name": driver1,
-                "Color": f"#{c1}" if c1 else "#000000",
+                "Color": c1 if c1 else "#000000",
                 "Telemetry": d1_data,
                 "LapTime": lap_d1['LapTime'].total_seconds()
             },
             "Driver2": {
                 "Name": driver2,
-                "Color": f"#{c2}" if c2 else "#000000",
+                "Color": c2 if c2 else "#000000",
                 "Telemetry": d2_data,
                 "LapTime": lap_d2['LapTime'].total_seconds()
             },
-            "Delta": delta_data
+            "Delta": delta_data,
+            "Corners": corners
         }
         
     except Exception as e:
