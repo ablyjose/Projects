@@ -60,7 +60,12 @@ def get_driver_standings(year=2025):
 
     updated_standings = standings.sort_values(by='Points', ascending=False).reset_index(drop=True)
     updated_standings.index = range(1, len(updated_standings) + 1)
-    updated_standings.to_csv('Formula1/standings.csv', index_label='Position')
+
+    standings_path = Path("Formula1/standings.csv")
+    if not standings_path.exists():
+        standings_path.touch()
+
+    updated_standings.to_csv(standings_path, index_label='Position')
     return updated_standings
 
 print(get_driver_standings())
