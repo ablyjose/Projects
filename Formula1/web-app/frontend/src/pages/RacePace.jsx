@@ -36,7 +36,7 @@ const RacePace = () => {
     // For race pace, laps usually align. Let's merge them for the Tooltip to work nicely.
 
     const processDataForChart = () => {
-        if (!data.length) return [];
+        if (!data.length) return { chartData: [] };
 
         // Find max laps
         const maxLaps = Math.max(...data.map(d => d.Laps.length));
@@ -56,6 +56,14 @@ const RacePace = () => {
     };
 
     const chartData = processDataForChart();
+
+    // Calculate Y-axis domain
+    const allLapTimes = data.flatMap(d => d.Laps.map(l => l.LapTime));
+    const minTime = allLapTimes.length > 0 ? Math.min(...allLapTimes) : 0;
+    const maxTime = allLapTimes.length > 0 ? Math.max(...allLapTimes) : 0;
+    const yDomain = allLapTimes.length > 0
+        ? [Math.floor(minTime), Math.ceil(maxTime)]
+        : ['auto', 'auto'];
 
     return (
         <div className="page-race-pace">
@@ -110,13 +118,13 @@ const RacePace = () => {
                 </div>
             </div>
 
-            <ChartContainer title={`Lap Times Comparison - ${gp} ${year}`}>
+            <ChartContainer title={`Lap Times Comparison - ${gp} ${year}`} height={600}>
                 {chartData.length > 0 ? (
                     <ResponsiveContainer width="100%" height="100%">
                         <LineChart data={chartData}>
                             <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                             <XAxis dataKey="Lap" stroke="var(--text-secondary)" />
-                            <YAxis domain={['auto', 'auto']} stroke="var(--text-secondary)" label={{ value: 'Time (s)', angle: -90, position: 'insideLeft' }} />
+                            <YAxis domain={yDomain} stroke="var(--text-secondary)" label={{ value: 'Time (s)', angle: -90, position: 'insideLeft' }} />
                             <Tooltip
                                 contentStyle={{ backgroundColor: '#1e1e1e', borderColor: '#333' }}
                                 itemStyle={{ color: '#fff' }}
