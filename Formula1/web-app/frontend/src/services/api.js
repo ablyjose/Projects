@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const api = axios.create({
     baseURL: 'http://localhost:8000',
-    timeout: 60000, // 1 minute to account for non-cached data
+    timeout: 240000, // 4 minutes to account for non-cached data
 });
 
 export const getEvents = async (year = 2025) => {
