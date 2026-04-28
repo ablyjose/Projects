@@ -7,7 +7,7 @@ const Standings = () => {
     const [standings, setStandings] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const [year, setYear] = useState(2025);
+    const [year, setYear] = useState(2026);
 
     useEffect(() => {
         const fetchStandings = async () => {
