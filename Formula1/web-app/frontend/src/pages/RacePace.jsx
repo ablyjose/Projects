@@ -6,14 +6,15 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 
 const RacePace = () => {
     const [data, setData] = useState([]);
+    const [totalLaps, setTotalLaps] = useState(0);
     const [loading, setLoading] = useState(false);
     const [events, setEvents] = useState([]);
 
     // Form State
-    const [year, setYear] = useState(2025);
+    const [year, setYear] = useState(2026);
     const [gp, setGp] = useState('Australia');
     const [session, setSession] = useState('R');
-    const [drivers, setDrivers] = useState('NOR, VER');
+    const [drivers, setDrivers] = useState('RUS, ANT, LEC, HAM');
 
     useEffect(() => {
         getEvents(year).then(setEvents).catch(console.error);
@@ -23,7 +24,8 @@ const RacePace = () => {
         setLoading(true);
         try {
             const result = await getRacePace(year, gp, session, drivers);
-            setData(result);
+            setData(result.Drivers || []);
+            setTotalLaps(result.TotalLaps || 0);
         } catch (err) {
             console.error(err);
         } finally {
@@ -38,8 +40,8 @@ const RacePace = () => {
     const processDataForChart = () => {
         if (!data.length) return { chartData: [] };
 
-        // Find max laps
-        const maxLaps = Math.max(...data.map(d => d.Laps.length));
+        // Use total laps from the session (covers full race distance including safety car laps)
+        const maxLaps = totalLaps > 0 ? totalLaps : Math.max(...data.map(d => d.Laps.length));
         const chartData = [];
 
         for (let i = 1; i <= maxLaps; i++) {
@@ -77,7 +79,7 @@ const RacePace = () => {
                         label="Year"
                         value={year}
                         onChange={setYear}
-                        options={[2025, 2024, 2023].map(y => ({ label: y, value: y }))}
+                        options={[2026, 2025, 2024, 2023].map(y => ({ label: y, value: y }))}
                     />
                     <InputSelect
                         label="Grand Prix"

@@ -7,6 +7,7 @@ import numpy as np
 import fastf1
 from fastf1 import utils
 import time
+from datetime import date
 from pathlib import Path
 import os
 
@@ -38,25 +39,26 @@ def fetch_openf1(url, cache_key=None, use_cache=True):
         response = urlopen(url)
         data = json.loads(response.read().decode('utf-8'))
     
-    if use_cache and cache_key:
+    if use_cache and cache_key and data:
         with open(file_path, "w") as f:
             json.dump(data, f)
             
     return data
 
 @router.get("/standings")
-def get_standings(year: int = 2025):
+def get_standings(year: int = 2026):
     try:
         # 1. Get Schedule
         schedule_data = fetch_openf1(
-            f"https://api.openf1.org/v1/sessions?date_start>={year}-01-01&date_end<={year}-12-31&session_type=Race",
-            cache_key=f"schedule_{year}"
+            f"https://api.openf1.org/v1/sessions?date_start>={year}-01-01&date_end<={min(str(date.today()), f'{year}-12-31')}&session_type=Race",
+            use_cache=False
         )
         schedule = pd.DataFrame(schedule_data)
         
         if schedule.empty:
             return []
 
+        schedule = schedule[schedule['is_cancelled'] == False]
         session_keys = schedule['session_key'].tolist()
         
         # 2. Get Initial Drivers (from first session) to easier initialize df
@@ -139,6 +141,9 @@ def get_race_pace(year: int, gp: str, session: str, drivers: str):
         
         response_data = []
 
+        # Get the total number of laps in the session
+        total_laps = int(sess.laps['LapNumber'].max()) if not sess.laps.empty else 0
+
         for drv in driver_list:
             try:
                 laps = sess.laps.pick_drivers(drv).pick_wo_box().pick_quicklaps()
@@ -167,7 +172,7 @@ def get_race_pace(year: int, gp: str, session: str, drivers: str):
                 print(f"Error for driver {drv}: {e}")
                 continue
                 
-        return response_data
+        return {"TotalLaps": total_laps, "Drivers": response_data}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -303,7 +308,7 @@ def get_telemetry(year: int, gp: str, session: str, driver1: str, driver2: str, 
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/events")
-def get_events(year: int = 2025):
+def get_events(year: int = 2026):
     try:
         schedule = fastf1.get_event_schedule(year)
         events = []
