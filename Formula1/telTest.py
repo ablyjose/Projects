@@ -30,8 +30,21 @@ match session_name:
         q1_driver_1, q2_driver_1, q3_driver_1 = session.laps.pick_drivers(driver_1).split_qualifying_sessions()
         q1_driver_2, q2_driver_2, q3_driver_2 = session.laps.pick_drivers(driver_2).split_qualifying_sessions()
 
-        fastest_driver_1 = q3_driver_1.pick_fastest()
-        fastest_driver_2 = q3_driver_2.pick_fastest()
+        choice = input("Which session? (Q1, Q2, Q3): ").upper()
+
+        match choice:
+            case 'Q1':
+                fastest_driver_1 = q1_driver_1.pick_fastest()
+                fastest_driver_2 = q1_driver_2.pick_fastest()
+            case 'Q2':
+                fastest_driver_1 = q2_driver_1.pick_fastest()
+                fastest_driver_2 = q2_driver_2.pick_fastest()
+            case 'Q3':
+                fastest_driver_1 = q3_driver_1.pick_fastest()
+                fastest_driver_2 = q3_driver_2.pick_fastest()
+            case _:
+                print("Session not recognized")
+                exit()
     case 'R' | 'S':
         driver_1_laps = session.laps.pick_drivers(driver_1)
         driver_2_laps = session.laps.pick_drivers(driver_2)
@@ -49,7 +62,7 @@ match session_name:
         else:
             fastest_driver_2 = driver_2_laps.pick_laps(int(lap_2))
     case _:
-        print("Session not recognized, please talk to developer")
+        print("Session not recognized")
         exit()
 
 telemetry_driver_1 = fastest_driver_1.get_telemetry().add_distance()
@@ -57,34 +70,59 @@ telemetry_driver_2 = fastest_driver_2.get_telemetry().add_distance()
 
 # plotting.setup_mpl()
 
-
-driver_colors = {
-    'NOR': '#D2FF00',
-    'PIA': '#FF8F00',
-    'RUS': '#00D2BE',
-    'ANT': '#ADD8E6',
-    'VER': '#1E2A78',
-    'TSU': '#1A2C80',
-    'LEC': '#DC0000',
-    'HAM': '#800080',
-    'ALB': '#FFCCC7',
-    'SAI': '#0082FA',
-    'HAD': '#12264F',
-    'LAW': '#F9F871',
-    'ALO': '#006F62',
-    'STR': '#006F62',
-    'OCO': '#F7F7F7',
-    'BEA': '#FF007F',
-    'HUL': '#39FF14',
-    'BOR': '#009739',
-    'GAS': '#4E90FF',
-    'COL': '#04299C',
-}
+if year == 2025:
+    driver_colors = {
+        'NOR': '#D2FF00',
+        'PIA': '#FF8F00',
+        'RUS': '#00D2BE',
+        'ANT': '#ADD8E6',
+        'VER': '#1E2A78',
+        'TSU': '#1A2C80',
+        'LEC': '#DC0000',
+        'HAM': '#800080',
+        'ALB': '#FFCCC7',
+        'SAI': '#0082FA',
+        'HAD': '#12264F',
+        'LAW': '#F9F871',
+        'ALO': '#006F62',
+        'STR': '#006F62',
+        'OCO': '#F7F7F7',
+        'BEA': '#FF007F',
+        'HUL': '#39FF14',
+        'BOR': '#009739',
+        'GAS': '#4E90FF',
+        'COL': '#04299C',
+    }
+else:
+    driver_colors = {
+        'NOR': '#D2FF00',
+        'PIA': '#FF8F00',
+        'RUS': '#00D2BE',
+        'ANT': '#ADD8E6',
+        'VER': '#1E2A78',
+        'HAD': '#1A2C80',
+        'LEC': '#DC0000',
+        'HAM': '#800080',
+        'ALB': '#FFCCC7',
+        'SAI': '#0082FA',
+        'LIN': '#12264F',
+        'LAW': '#F9F871',
+        'ALO': '#006F62',
+        'STR': '#006F62',
+        'OCO': '#F7F7F7',
+        'BEA': '#FF007F',
+        'HUL': '#39FF14',
+        'BOR': '#009739',
+        'GAS': '#4E90FF',
+        'COL': '#04299C',
+        'PER': '#006F62',
+        'BOT': '#006F62',
+    }
 
 driver_1_color = driver_colors[driver_1]
 driver_2_color = driver_colors[driver_2]
 
-driver2s = {'NOR', 'ANT', 'TSU', 'HAM', 'SAI', 'LAW', 'ALO', 'BEA', 'BOR', 'COL'}
+driver2s = {'NOR', 'ANT', 'TSU', 'HAM', 'SAI', 'LAW', 'ALO', 'BEA', 'BOR', 'COL'} if year == 2025 else {'NOR', 'ANT', 'HAD', 'HAM', 'SAI', 'LAW', 'ALO', 'BEA', 'BOR', 'COL', 'BOT'}
 
 driver_1_style = {'color': driver_1_color, 'linestyle': '-'}
 driver_2_style = {'color': driver_2_color, 'linestyle': '-'}
