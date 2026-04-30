@@ -5,12 +5,12 @@ from fastf1.core import Laps
 
 ff1.Cache.enable_cache('Formula1/cache')
 
-year, gp, type = 2025, "Belgium", 'R'
+year, gp, session_type = int(input("Year: ")), input("GP: "), input("Session: ")
 
-session = ff1.get_session(year, gp, type)
+session = ff1.get_event(year, gp).get_session(session_type)
 session.load()
 
-drivers = ['NOR', 'PIA']
+drivers = input("Drivers: ").upper().replace(" ", "").split(',')
 
 for driver in drivers:
     driver_laps = session.laps.pick_drivers(driver)
