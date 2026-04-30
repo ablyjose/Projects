@@ -3,11 +3,14 @@ from urllib.error import HTTPError
 import json
 import pandas as pd
 import time
+from datetime import date
 from pathlib import Path
 
-def get_driver_standings(year=2025):
-    schedule_call = urlopen(f"https://api.openf1.org/v1/sessions?date_start>={year}-01-01&date_end<={year}-12-31&session_type=Race")
+def get_driver_standings(year=2026):
+    end_date = f"{year}-12-31"
+    schedule_call = urlopen(f"https://api.openf1.org/v1/sessions?date_start>={year}-01-01&date_end<={min(str(date.today()), end_date)}&session_type=Race")
     schedule = pd.DataFrame(json.loads(schedule_call.read().decode('utf-8')))
+    schedule = schedule[schedule['is_cancelled'] == False]
     session_keys = schedule['session_key'].tolist()
     
     driver_call = urlopen(f"https://api.openf1.org/v1/drivers?session_key={session_keys[0]}")
@@ -33,6 +36,7 @@ def get_driver_standings(year=2025):
                 session_call = urlopen(f"https://api.openf1.org/v1/session_result?session_key={key}")
                 session_data = json.loads(session_call.read().decode('utf-8'))
             except HTTPError as e:
+                print("Rate limit exceeded. Retrying...")
                 time.sleep(0.2)
                 session_call = urlopen(f"https://api.openf1.org/v1/session_result?session_key={key}")
                 session_data = json.loads(session_call.read().decode('utf-8'))

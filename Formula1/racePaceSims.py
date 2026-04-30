@@ -11,13 +11,13 @@ import pandas as pd
 
 ff1.Cache.enable_cache('Formula1/cache')
 
-year, gp, session_name = 2025, "Brazil", 'R'
+year, gp, session_name = 2026, "Japan", 'R'
 
 session = ff1.get_session(year, gp, session_name)
 session.load(messages=False, weather=False)
 
 # pick the first four drivers in the order they appear in the loaded laps
-drivers = ['NOR', 'PIA', 'VER'] # hard coded drivers in due to inconsistent order in which drivers appear in laps data
+drivers = ['ANT', 'PIA', 'LEC'] # hard coded drivers in due to inconsistent order in which drivers appear in laps data
 linestyles = ['-', ':']
 linestyle_mapping = {driver: linestyles[i % len(linestyles)] for i, driver in enumerate(drivers)}
 race_sims = list()
